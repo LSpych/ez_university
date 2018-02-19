@@ -48,3 +48,19 @@ class Student(models.Model):
 
     class Meta:
         ordering = ['last_name', 'first_name']
+
+class Section(models.Model):
+    section_id = models.AutoField(primary_key=True)
+    section_name = models.CharField(max_length=10)
+    semester = models.ForeignKey(Semester, related_name='sections', on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, related_name='sections',on_delete=models.CASCADE)
+    instructors = models.ManyToManyField(Instructor, related_name='sections')
+    students = models.ManyToManyField(Student, related_name='sections')
+
+    def __str__(self):
+        return '%s - %s (%s)' % (self.course.course_number, self.section_name, self.semester.semester_name)
+
+    class Meta:
+        ordering = ['course__course_number','section_name','semester__semester_name']
+
+        
